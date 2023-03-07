@@ -18,22 +18,21 @@ p_24 = cp.Variable(1, nonneg=True)
 
 # find a correlated equilibrium maximizing social welfare
 
-obj = cp.Maximize(3 * p_01 + p_03 + 6 * p_11 + 6 * p_14+p_23+3*p_24)
+obj = cp.Maximize(3 * p_01 + p_03 + 6 * p_11 + 6 * p_14 + p_23 + 3*p_24)
 
 constraints = [p_01 + p_02 + p_03 + p_04 + p_11 + p_12 + p_13 +
                p_14 + p_21 + p_22 + p_23 + p_24 == 1]  # probabilities sum to 1
 
 # row player has no incentive to deviate
-constraints += [3*p_01 + 2*p_11 == p_03 + 2*p_14]
+constraints += [2*p_11 + p_03 + 2*p_14 >= p_01 + 2*p_13 + 2*p_12]
 
 
 # column player has no incentive to deviate
-
-constraints += [2*p_11+p_23 == 2 * p_04]
+constraints += [2*p_11+p_23 + 2 * p_14 >= 2*p_13 + 2*p_12 + p_24]
 
 # matrix player has no incentive to deviate
-constraints += [3*p_01 == 2*p_11+2*p_14]
-constraints += [p_01 == p_24]
+constraints += [3*p_01 + 2*p_11+2*p_14 + 3*p_24 >=
+                2*p_01+3*p_04+3*p_11+3*p_14+3*p_21+2*p_24]
 
 
 prob = cp.Problem(obj, constraints)
